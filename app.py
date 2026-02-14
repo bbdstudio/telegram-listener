@@ -49,12 +49,14 @@ class AppState:
         self.client: Optional[TelegramClient] = None
         self.listener_started: bool = False
         self.listener_task: Optional[asyncio.Task] = None
-        self.phone_cache: dict = {}  # Para guardar telefone temporariamente
+        self.phone_cache: dict = {}
     
     async def initialize(self):
         """Inicializa o cliente Telegram"""
         if self.client is None:
-            self.client = TelegramClient("session", API_ID, API_HASH)
+            # IMPORTANTE: Usa /data para persistência
+            session_path = "/data/session"
+            self.client = TelegramClient(session_path, API_ID, API_HASH)
             await self.client.connect()
             logger.info("Cliente Telegram conectado")
             

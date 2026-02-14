@@ -13,8 +13,8 @@ services:
       - CHANNEL_ID=${CHANNEL_ID}
       - WEBHOOK_URL=${WEBHOOK_URL}
     volumes:
-      # Volume persistente para sessão do Telegram
-      - telegram-session:/app
+      # IMPORTANTE: Volume montado em /data (não /app)
+      - telegram-session:/data
     networks:
       - telegram-net
     healthcheck:

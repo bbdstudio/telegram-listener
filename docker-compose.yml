@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  telegram-listener:
+    build: .
+    container_name: telegram-listener
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - API_ID=${API_ID}
+      - API_HASH=${API_HASH}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+    volumes:
+      # Volume persistente para sessão do Telegram
+      - telegram-session:/app
+    networks:
+      - telegram-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  telegram-session:
+    driver: local
+
+networks:
+  telegram-net:
+    driver: bridge
